@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+.login-form {
+  @apply bg-white p-8 rounded-lg shadow-lg w-full max-w-md border-t-8 flex flex-col gap-4;
+  border-color: #6B1FAD;
+}
+
+.login-title {
+  @apply text-2xl font-bold text-center;
+  color: #6B1FAD;
+}
+
+.login-input {
+  @apply p-3 border rounded focus:outline-none focus:ring-2;
+  color: black;
+}
+
+.login-button {
+  @apply py-3 rounded font-semibold text-white;
+  background-color: #6B1FAD;
+}

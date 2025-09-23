@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Absence {
+  id           String   @id @default(uuid())
+  employeeName String
+  employeeId   String
+  startDate    DateTime
+  endDate      DateTime
+  reason       String
+  status       String   // "odottaa", "hyväksytty", "hylätty", "palautettu"
+  esihenkiloId String?
+  esihenkiloNimi String?
+  approvedDate DateTime?
+  createdAt    DateTime @default(now())
+}
