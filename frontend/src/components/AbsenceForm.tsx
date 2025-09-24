@@ -1,21 +1,19 @@
 "use client"
 
-
 import type React from "react"
-
 import { useState } from "react"
+import Layout from "./AppLayout"
 
 const AbsenceForm = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}")
 
   const [formData, setFormData] = useState({
-    employeeName: `${user.etunimi} ${user.sukunimi}`, // ✅ Template string oikein
-    employeeId: user.id,
+    employeeName: `${user.etunimi ?? ""} ${user.sukunimi ?? ""}`,
+    employeeId: user.id ?? "",
     reason: "",
     startDate: "",
     endDate: "",
   })
-
 
   const [error, setError] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -63,74 +61,76 @@ const AbsenceForm = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <button
-        onClick={() => {
-          localStorage.removeItem("user")
-          window.location.href = "/"
-        }}
-        className="mb-4 bg-red-600 text-white px-4 py-2 rounded"
-      >
-        Kirjaudu ulos
-      </button>
+    <Layout>
+      <div className="max-w-md mx-auto p-4">
+        
 
-      <form onSubmit={handleSubmit} className="space-y-4 border rounded p-4 bg-white shadow">
-        <h2 className="text-xl font-bold">Poissaolohakemus</h2>
+        <form onSubmit={handleSubmit} className="space-y-4 border rounded p-4 bg-white shadow">
+          <h2 className="text-xl font-bold">Poissaolohakemus</h2>
 
-        {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">{error}</div>}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">{error}</div>
+          )}
 
-        <input
-          type="text"
-          name="employeeName"
-          value={formData.employeeName}
-          className="w-full border p-2 bg-gray-100"
-          disabled
-        />
+          <input
+            type="text"
+            name="employeeName"
+            value={formData.employeeName}
+            className="w-full border p-2 bg-gray-100"
+            disabled
+          />
 
-        <input
-          type="text"
-          name="employeeId"
-          value={formData.employeeId}
-          className="w-full border p-2 bg-gray-100"
-          disabled
-        />
+          <input
+            type="text"
+            name="employeeId"
+            value={formData.employeeId}
+            className="w-full border p-2 bg-gray-100"
+            disabled
+          />
 
-        <select name="reason" value={formData.reason} onChange={handleChange} className="w-full border p-2" required>
-          <option value="">Valitse syy</option>
-          <option value="sairaus">Sairaus</option>
-          <option value="loma">Loma</option>
-          <option value="saldovapaa">Saldovapaa</option>
-          <option value="muu">Muu</option>
-        </select>
+          <select
+            name="reason"
+            value={formData.reason}
+            onChange={handleChange}
+            className="w-full border p-2"
+            required
+          >
+            <option value="">Valitse syy</option>
+            <option value="loma">Loma</option>
+            <option value="saldovapaa">Saldovapaa</option>
+            <option value="työmatka">Työmatka</option>
+            <option value="muu">Muu</option>
+          </select>
 
-        <input
-          type="date"
-          name="startDate"
-          value={formData.startDate}
-          onChange={handleChange}
-          className="w-full border p-2"
-          required
-        />
+          <input
+            type="date"
+            name="startDate"
+            value={formData.startDate}
+            onChange={handleChange}
+            className="w-full border p-2"
+            required
+          />
 
-        <input
-          type="date"
-          name="endDate"
-          value={formData.endDate}
-          onChange={handleChange}
-          className="w-full border p-2"
-          required
-        />
+          <input
+            type="date"
+            name="endDate"
+            value={formData.endDate}
+            onChange={handleChange}
+            className="w-full border p-2"
+            required
+          />
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Lähetetään..." : "Lähetä"}
-        </button>
-      </form>
-    </div>
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Lähetetään..." : "Lähetä"}
+          </button>
+        </form>
+      </div>
+    </Layout>
   )
 }
 
-export default AbsenceForm
+export default AbsenceForm
