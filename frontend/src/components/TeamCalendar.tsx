@@ -65,8 +65,9 @@ const TeamCalendar = () => {
     let backgroundColor = '#ccc';
     if (event.reason === 'loma') backgroundColor = '#4A90E2';
     else if (event.reason === 'saldovapaa') backgroundColor = '#F5A623';
-    else if (event.reason === 'työmatka') backgroundColor = '#FFAD4B7';
-    else backgroundColor = '#9e9e9e';
+    else if (event.reason === 'työmatka') backgroundColor = '#FAD4B7';
+    else if (event.reason === 'muu') backgroundColor = '#9e9e9e';
+    
 
     return {
       style: {
