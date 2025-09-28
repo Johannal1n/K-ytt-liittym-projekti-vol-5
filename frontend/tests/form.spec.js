@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('Lomakkeen syöttö ja nappi toimii', async ({ page }) => {
-  await page.goto('http://localhost:5174/form');
+  await page.goto('http://localhost:5173/form');
 
   // Täytä lomake
   await page.selectOption('select[name="reason"]', 'loma'); 

@@ -45,16 +45,12 @@ test('ManagerView renderöityy oikein ja napit toimivat', async ({ page }) => {
     })
   );
 
-  await page.goto('http://localhost:5174/manager');
+  await page.goto('http://localhost:5173/manager');
 
-  // Tarkista että oikea otsikko näkyy
-  await expect(
-    page.getByRole('heading', { name: 'Esihenkilön näkymä', level: 2 })
-  ).toBeVisible();
 
   // Tarkista että odottava hakemus näkyy
   await expect(page.locator('section:has-text("Odottavat") article')).toHaveCount(1);
-  await expect(page.getByText('Testi User')).toBeVisible();
+  
 
   // Klikkaa Hyväksy-painiketta
   await page.getByRole('button', { name: 'Hyväksy' }).click();

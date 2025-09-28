@@ -1,5 +1,10 @@
-//saako poistaa?
+// routes.ts
+import { type RouteConfig, layout, index } from "@react-router/dev/routes";
+import { Layout } from "./root";
 
-import { type RouteConfig, index } from "@react-router/dev/routes";
-
-export default [index("routes/home.tsx")] satisfies RouteConfig;
+export default [
+  layout(Layout, [
+    index("routes/index.tsx"), 
+    route("crash", "routes/crash.tsx"),
+  ]),
+] satisfies RouteConfig;

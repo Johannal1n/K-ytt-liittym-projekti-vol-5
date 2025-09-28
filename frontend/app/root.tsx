@@ -35,6 +35,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <nav>
+          <a href="/" role="link">Etusivulle</a>
+        </nav>
+
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -42,6 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
+
 
 export default function App() {
   return <Outlet />;

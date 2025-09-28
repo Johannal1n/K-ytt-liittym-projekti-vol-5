@@ -146,4 +146,71 @@ Frontend hoitaa kirjautumisen ja roolit, mutta backend hallinnoi poissaolojen CR
 
 ### Frontend lähettää pyyntöjä backendille, backend tallentaa poissaolot tietokantaan ja palauttaa tiedot takaisin frontendille, joka näyttää ne käyttäjälle
 
+### Tietoturva-analyysi ja poikkeamat:
+
+1. Ei autentikointia API-päätteissä
+Backend-reitit (/api/absences) ovat täysin avoimia
+Kuka tahansa voi hakea, luoda tai muokata poissaoloja
+Ei JWT-tokeneja, sessiovalidointia tai mitään autentikointia
+
+2. Vain frontend-puolen valtuutus
+Kaikki käyttöoikeustarkistukset tehdään vain frontendissä localStorage:n avulla
+Käyttäjät voivat ohittaa roolirajoitukset kutsumalla API:a suoraan
+ManagerView.tsx:n roolintarkistus estää vain UI:n näyttämisen, ei datan käsittelyä
+
+3. Turvaton sessioiden hallinta
+Käyttäjätiedot tallennetaan localStorage:iin (ei turvallista)
+Ei session timeout:ia tai uudelleenvalidointia
+Ei turvallisia session-tokeneja
+
+4. Kovakoodattu käyttäjätietokanta
+Salasanat tallennettu selkotekstinä ("pekka123", "maija123")
+Ei salasanojen hashausta
+Käyttäjätiedot frontend-koodissa näkyvissä
+
+5. Puuttuva pääsynhallinta API:ssa
+GET /api/absences palauttaa KAIKKI poissaolot kenelle tahansa
+POST /api/absences sallii kenen tahansa luoda poissaoloja kenelle tahansa
+PATCH /api/absences/:id sallii tilan päivitykset ilman esihenkilön varmistusta
+
+6. Datan paljastuminen
+Frontend hakee kaikki poissaolot ja suodattaa ne vasta sen jälkeen
+Arkaluontoinen työntekijädata näkyy luvattomille käyttäjille
+
+7. Korjausehdotukset:
+Koodin tulisi toteuttaa:
+- Backend-autentikointi middleware
+- JWT-pohjainen sessioiden hallinta
+- Salasanojen hashays
+- Roolipohjainen pääsynhallinta API-päätteissä
+- Server-puolen datasuodatus
+- Turvallisten HTTP-only cookiejen käyttö localStorage:n sijaan
+
+### Playwright-testaus
+
+- Frontend-kansiosta löytyy 2 testausta, jotka suoritettu Playwrightilla:
+  1. Manager-näkymän testaus
+  2. Lomake-toimivuuden testaus
+  -> Nämä testauksen läpäisty.
+
+
+### Testaus omalla havainnoilla.
+
+1. Kirjauduttu työntekijä-oikeuksin ✅
+2. Lähetetty poissaolohakemus ajanjaksolle 29.9.-30.9.2025,
+koska tässä oli jo päällekkäisyys hyväksytyssä poissaolossa, 
+ei sovellus antanut tehdä toista hakemusta samalle ajanjaksolle ✅
+3. Lähetetty hakemus ajanjaksolle 1.10.2025, jonka sovellus välitti esihenkilölle hyväksyttäväksi,
+päällekkäisyyttä ei ollut, joten tämä oli toimiva ✅
+4. Kirjauduttu esihenkilö-oikeuksin ✅
+5. Sovelluksessa oli työntekijän hakemus 1.10.2025 ajanjaksolle odottavissa ✅
+6. Hakemus hyväksytty, jolloin siirtyi Hyväksyttyihin hakemuksiin ✅
+7. Poissaolotieto siirtyi oikein kalenteri-näkymään esihenkilölle ✅
+8. Esihenkilöllä näkyy kaikkien työntekijöiden poissaolot kalenterinäkymässä ✅
+9. Työntekijällä näkyy vain omat hyväksytyt poissaolot kalenterinäkymässä ✅
+10. Yllä olevia testauksia tehdässä havaittu myös navikoinnin toimivan tarkoituksen mukaisesti ✅
+
+
+
+
 © 2025 Poissaolosovellus
