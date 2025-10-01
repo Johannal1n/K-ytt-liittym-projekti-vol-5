@@ -7,14 +7,18 @@ Frontend lähettää pyyntöjä backendille, backend tallentaa poissaolot tietok
 
 ## Ominaisuudet / Frontend
 
-- 🔐 **Kirjautuminen**
+- 🔐 **Kirjautuminen** 
+![Kirjautuminen](frontend/screenshots/login.png)
+
   - Käyttäjät tunnistetaan käyttäjätunnuksen ja salasanan perusteella.
   - Käyttäjätiedot haetaan staattisesta `users.ts`-tiedostosta.
   - Kirjautumisen jälkeen käyttäjä ohjataan roolinsa mukaiseen näkymään.
 
 - 🧑‍💼 **Roolipohjaiset näkymät**
   - **Työntekijä** ohjataan `/EmployeeHome`-näkymään, jossa näkyvät omat poissaolot ja painikkeet lomakkeen lähetykseen ja kalenteriin.
+  ![Työntekijänäkymä](frontend/screenshots/ttnakyma.png)
   - **Esihenkilö** ohjataan `/ManagerView`-näkymään, jossa näkyvät tiimin poissaolot ryhmiteltynä tilan mukaan.
+  ![Esihenkilönäkymä](frontend/screenshots/esihlonakyma.png)
 
   users.ts sisältää:
     🧑‍💼id
@@ -26,12 +30,14 @@ Frontend lähettää pyyntöjä backendille, backend tallentaa poissaolot tietok
     🧑‍💼esihenkiloId
 
 - 📅 **Kalenterinäkymä** (`/TeamCalendar`)
+![Kalenterinäkymä](frontend/screenshots/kalenteri.png)
   - Näyttää poissaolot joko viikko tai kuukausinäkymässä
   - Värikoodaus eri poissaolosyille (loma, saldovapaa, työmatka, muu).
   - Navigointipainikkeet: edellinen, nykyinen, seuraava, viikko/kuukausinäkymä.
   - Käytettävissä molemmille rooleille. Esihenkilö-roolilla näkee koko tiimin poissaolot, työntekijä-roolilla näkee omat poissaolot.
 
 - 📝 **Poissaolohakemuslomake** (`/AbsenceForm`)
+![Hakemuslomake](frontend/screenshots/hakemus.png)
   - Käyttäjä voi lähettää uuden poissaolohakemuksen.
   - Lomake tarkistaa pakolliset kentät ja päivämäärien oikeellisuude, päällekkäisiä päivämääriä ei sallita.
   - Jos poissaolon syy on saldovapaa tai loma, lomake menee esihenkilölle hyväksyttäväksi. Esihenkilö määritellään users-tiedostossa.
@@ -47,9 +53,9 @@ Frontend lähettää pyyntöjä backendille, backend tallentaa poissaolot tietok
 - 🧭 react-router-dom reititykseen
 - 📦 Vite kehitysympäristönä
 
-## Reitit
+## Komponentit 
 
-| Reitti                | Näkymä               | Rooli         |
+| Komponentti           | Näkymä               | Rooli         |
 |-----------------------|----------------------|---------------|
 | `/AbsenceForm`        | Poissaolohakemus     | Molemmat      |
 | `/AppLayout`          | Alareunan kuva       | Molemmat      |
@@ -67,7 +73,7 @@ Frontend lähettää pyyntöjä backendille, backend tallentaa poissaolot tietok
 
 🗄️ Tietokanta (Prisma + SQLite)
 
-Käytössä Prisma ORM:ää (työkalu, jolla voit työskennellä tietokantojen kanssa ilman, että kirjoitat suoraan SQL-kyselyitä) SQLite-tietokannan kanssa.
+Käytössä Prisma ORM (työkalu, jolla voit työskennellä tietokantojen kanssa ilman, että kirjoitat suoraan SQL-kyselyitä) SQLite-tietokannan kanssa.
 schema.prisma määrittelee Absence-mallin:
 Jokaisella poissaololla (Absence) on:
     id (UUID, automaattisesti luotu)
@@ -146,7 +152,7 @@ Frontend hoitaa kirjautumisen ja roolit, mutta backend hallinnoi poissaolojen to
 ##### KÄYNNISTYS
 
 1. Asenna riippuvuudet: npm install (backend + frontend)
-2. Asenna prisma npm prisma generate
+2. Asenna prisma: npx prisma generate
 3. Käynnistä ensin backend npm run dev ja sitten frontend npm run dev
   
 
@@ -198,12 +204,37 @@ Koodin tulisi toteuttaa:
 - Server-puolen datasuodatus
 - Turvallisten HTTP-only cookiejen käyttö localStorage:n sijaan
 
-### Playwright-testaus
 
-- Frontend-kansiosta löytyy 2 testausta, jotka suoritettu Playwrightilla:
-  1. Manager-näkymän testaus
-  2. Lomake-toimivuuden testaus
-  -> Nämä testauksen läpäisty.
+# Playwright Testien Yhteenveto
+
+|---------------------------------------------------------------------------------------------------------------------------------------| 
+| Testi / Tiedosto           | Testauksen kohde            | Mitä testataan                                                 |Tila       |
+|----------------------------|-----------------------------|----------------------------------------------------------------|-----------|
+|                            |                             |- Poissaolohakemus-nappi                                        |✅     
+|                            |                             |- Poissaololista renderöityy                                    |✅
+|                            |                             |- Väripallot näkyvät oikein                                     |✅
+|                            |                             |- Käytetyt päivät yhteenveto                                    |✅
+|                            |                             |- Tyhjä lista näyttää "Ei poissaoloja"                          |✅
+|                            |                             |- GET /api/absences epäonnistuminen näyttää virheilmoituksen    |✅
+|---------------------------------------------------------------------------------------------------------------------------------------| 
+| **Form**                   |Poissaolohakemuslomake       |- Lomakkeen kenttien syöttö                                     |✅
+|                            |                             |- Lähetä-napin toiminta                                         |✅
+|                            |                             |- Alert-viesti poissaolohakemuksen lähetyksestä                 |✅
+|---------------------------------------------------------------------------------------------------------------------------------------| 
+| **ManagerView**            |Esihenkilönäkymä             |- Odottavat poissaolot näkyvät                                  |✅
+|                            |                             |- Hyväksy-painikkeen toiminta                                   |✅
+|                            |                             |- Hyväksyttyjen listalle siirtyminen onnistuu                   |✅
+|---------------------------------------------------------------------------------------------------------------------------------------| 
+| **RoleAccess**             |Roolipohjainen ohjaus        |- Työntekijä ohjautuu EmployeeHome-näkymään                     |✅
+|                            |                             |- Esihenkilö ohjautuu ManagerView-näkymään                      |✅
+|                            |                             |- Työntekijä ei pääse ManagerView-näkymään, virheilmoitus näkyy |✅
+|---------------------------------------------------------------------------------------------------------------------------------------| 
+| **TeamCalendar**           |Tiimikalenteri               |- Kalenterin renderöinti                                        |✅
+|                            |                             |- Kuukausi-/viikkonäkymän vaihto                                |✅
+|                            |                             |- Navigointinapit (Edellinen, Nykyinen, Seuraava)               |✅
+|                            |                             |- Poissaolot näkyvät tapahtumina                                |✅
+|                            |                             |- Värikoodaus toimii                                            |✅
+|---------------------------------------------------------------------------------------------------------------------------------------| 
 
 
 ### Testaus omalla havainnoilla.

@@ -14,24 +14,38 @@ type Absence = {
 };
 
 const ManagerView = () => {
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const [absences, setAbsences] = useState<Absence[]>([]);
   const [filterEmployee, setFilterEmployee] = useState("");
+  const [unauthorized, setUnauthorized] = useState(false);
 
+  // Käyttäjä localStoragesta
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // 🔒 Tarkista rooli
   useEffect(() => {
-    const fetchAbsences = async () => {
-      try {
-        const res = await fetch("http://localhost:3001/api/absences");
-        const data: Absence[] = await res.json();
-        // Suodatetaan esihenkilön alaiset
-        const filtered = data.filter((a) => String(a.esihenkiloId) === String(user.id));
-        setAbsences(filtered);
-      } catch (err) {
-        console.error("Virhe poissaolojen haussa:", err);
-      }
-    };
-    fetchAbsences();
-  }, [user.id]);
+    if (user.rooli !== "esihenkilo") {
+      setUnauthorized(true);
+    }
+  }, [user.rooli]);
+
+  // Hae poissaolot jos esihenkilö
+  useEffect(() => {
+    if (user.rooli === "esihenkilo") {
+      const fetchAbsences = async () => {
+        try {
+          const res = await fetch("http://localhost:3001/api/absences");
+          const data: Absence[] = await res.json();
+          const filtered = data.filter(
+            (a) => String(a.esihenkiloId) === String(user.id)
+          );
+          setAbsences(filtered);
+        } catch (err) {
+          console.error("Virhe poissaolojen haussa:", err);
+        }
+      };
+      fetchAbsences();
+    }
+  }, [user.id, user.rooli]);
 
   const handleStatusUpdate = async (absenceId: string, newStatus: string) => {
     try {
@@ -56,7 +70,28 @@ const ManagerView = () => {
     }
   };
 
-  const formatDate = (dateStr: string) => new Date(dateStr).toLocaleDateString("fi-FI");
+  const formatDate = (dateStr: string) =>
+    new Date(dateStr).toLocaleDateString("fi-FI");
+
+  // Jos ei oikeuksia → näytetään virhesivu
+  if (unauthorized) {
+    return (
+      <Layout>
+        <div className="p-6 max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Ei käyttöoikeutta</h2>
+          <p className="text-gray-700 mb-4">
+            Tämä näkymä on tarkoitettu vain esihenkilöille.
+          </p>
+          <a
+            href="/home"
+            className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Takaisin etusivulle
+          </a>
+        </div>
+      </Layout>
+    );
+  }
 
   // Suodatus työntekijän perusteella
   const filteredAbsences = filterEmployee
@@ -79,6 +114,7 @@ const ManagerView = () => {
       <div className="p-6 max-w-7xl mx-auto">
         <h2 className="text-2xl font-bold mb-4">Esihenkilön näkymä</h2>
 
+        {/* Suodatus */}
         <div className="mb-6">
           <label className="block mb-2 font-medium">Suodata työntekijän mukaan:</label>
           <select
@@ -95,6 +131,7 @@ const ManagerView = () => {
           </select>
         </div>
 
+        {/* Kolumnit */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* Odottavat */}
           <section className="border rounded p-4 bg-white/90 shadow-sm">
