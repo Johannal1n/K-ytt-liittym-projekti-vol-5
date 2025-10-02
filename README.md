@@ -239,19 +239,19 @@ Koodin tulisi toteuttaa:
 
 ### Testaus omalla havainnoilla.
 
-1. Kirjauduttu työntekijä-oikeuksin ✅
-2. Lähetetty poissaolohakemus ajanjaksolle 29.9.-30.9.2025,
+✅ Kirjauduttu työntekijä-oikeuksin 
+✅ Lähetetty poissaolohakemus ajanjaksolle 29.9.-30.9.2025,
 koska tässä oli jo päällekkäisyys hyväksytyssä poissaolossa, 
-ei sovellus antanut tehdä toista hakemusta samalle ajanjaksolle ✅
-3. Lähetetty hakemus ajanjaksolle 1.10.2025, jonka sovellus välitti esihenkilölle hyväksyttäväksi,
-päällekkäisyyttä ei ollut, joten tämä oli toimiva ✅
-4. Kirjauduttu esihenkilö-oikeuksin ✅
-5. Sovelluksessa oli työntekijän hakemus 1.10.2025 ajanjaksolle odottavissa ✅
-6. Hakemus hyväksytty, jolloin siirtyi Hyväksyttyihin hakemuksiin ✅
-7. Poissaolotieto siirtyi oikein kalenteri-näkymään esihenkilölle ✅
-8. Esihenkilöllä näkyy kaikkien työntekijöiden poissaolot kalenterinäkymässä ✅
-9. Työntekijällä näkyy vain omat hyväksytyt poissaolot kalenterinäkymässä ✅
-10. Yllä olevia testauksia tehdässä havaittu myös navikoinnin toimivan tarkoituksen mukaisesti ✅
+ei sovellus antanut tehdä toista hakemusta samalle ajanjaksolle 
+✅ Lähetetty hakemus ajanjaksolle 1.10.2025, jonka sovellus välitti esihenkilölle hyväksyttäväksi,
+päällekkäisyyttä ei ollut, joten tämä oli toimiva 
+✅ Kirjauduttu esihenkilö-oikeuksin 
+✅ Sovelluksessa oli työntekijän hakemus 1.10.2025 ajanjaksolle odottavissa 
+✅ Hakemus hyväksytty, jolloin siirtyi Hyväksyttyihin hakemuksiin 
+✅ Poissaolotieto siirtyi oikein kalenteri-näkymään esihenkilölle 
+✅ Esihenkilöllä näkyy kaikkien työntekijöiden poissaolot kalenterinäkymässä 
+✅ Työntekijällä näkyy vain omat hyväksytyt poissaolot kalenterinäkymässä 
+✅ Yllä olevia testauksia tehdässä havaittu myös navikoinnin toimivan tarkoituksen mukaisesti 
 
 © 2025 Poissaolosovellus
 
